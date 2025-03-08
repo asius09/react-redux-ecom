@@ -20,4 +20,4 @@ const productsSlice = createSlice({
 });
 
 export const { loadMore } = productsSlice.actions;
-export default productsSlice.reducer;
+export default productsSlice;
