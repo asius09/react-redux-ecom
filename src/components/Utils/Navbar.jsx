@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useLocation } from "react-router";
 import { toggleTheme } from "../../feature/theme/theme";
 
 const Navbar = () => {
   const isDarkMode = useSelector((state) => state.theme?.theme === "dark");
   const dispatch = useDispatch();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const cartItems = useSelector((state) => state.cart.products);
+  const location = useLocation();
 
   useEffect(() => {
     const html = document.documentElement;
@@ -21,6 +23,18 @@ const Navbar = () => {
 
   const handleToggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    // Implement search functionality
+    console.log("Searching for:", searchQuery);
+    // Clear search after submission
+    setSearchQuery("");
+  };
+
+  const isLinkActive = (path) => {
+    return location.pathname === path;
   };
 
   return (
@@ -43,9 +57,12 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-8">
             <NavLink
               to="/"
-              className={
-                /* isActive */
-                `flex items-center gap-2 font-medium transition-colors py-2 hover:text-indigo-500`
+              className={({ isActive }) =>
+                `flex items-center gap-2 font-medium transition-colors py-2 ${
+                  isActive
+                    ? "text-indigo-600 font-semibold"
+                    : "hover:text-indigo-500"
+                }`
               }
             >
               <i className="ri-dashboard-line"></i>
@@ -53,19 +70,25 @@ const Navbar = () => {
             </NavLink>
             <NavLink
               to="/products"
-              className={
-                /* isActive */
-                `flex items-center gap-2 font-medium transition-colors py-2 hover:text-indigo-500`
+              className={({ isActive }) =>
+                `flex items-center gap-2 font-medium transition-colors py-2 ${
+                  isActive
+                    ? "text-indigo-600 font-semibold"
+                    : "hover:text-indigo-500"
+                }`
               }
             >
               <i className="ri-shopping-bag-3-line"></i>
               <span>Products</span>
             </NavLink>
             <NavLink
-              to="/cart"
-              className={
-                /* isActive */
-                `flex items-center gap-2 font-medium transition-colors py-2 relative hover:text-indigo-500`
+              to="/cart/name"
+              className={({ isActive }) =>
+                `flex items-center gap-2 font-medium transition-colors py-2 relative ${
+                  isActive
+                    ? "text-indigo-600 font-semibold"
+                    : "hover:text-indigo-500"
+                }`
               }
             >
               <i className="ri-shopping-cart-2-line"></i>
@@ -76,6 +99,28 @@ const Navbar = () => {
                 </span>
               )}
             </NavLink>
+          </div>
+
+          <div className="hidden md:flex items-center mr-4">
+            <form onSubmit={handleSearch} className="relative">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={`pl-10 pr-4 py-2 rounded-full text-sm focus:outline-none focus:ring-2 ${
+                  isDarkMode
+                    ? "bg-gray-800 text-gray-100 focus:ring-indigo-500 border-gray-700"
+                    : "bg-gray-100 text-gray-800 focus:ring-indigo-400 border-gray-200"
+                } border`}
+              />
+              <button
+                type="submit"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2"
+              >
+                <i className={`ri-search-line ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}></i>
+              </button>
+            </form>
           </div>
 
           <div className="flex items-center gap-4">
@@ -138,11 +183,33 @@ const Navbar = () => {
               isDarkMode ? "bg-gray-800" : "bg-gray-50"
             } shadow-lg`}
           >
+            <form onSubmit={handleSearch} className="relative mb-3">
+              <input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className={`w-full pl-10 pr-4 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 ${
+                  isDarkMode
+                    ? "bg-gray-700 text-gray-100 focus:ring-indigo-500 border-gray-600"
+                    : "bg-white text-gray-800 focus:ring-indigo-400 border-gray-200"
+                } border`}
+              />
+              <button
+                type="submit"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2"
+              >
+                <i className={`ri-search-line ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}></i>
+              </button>
+            </form>
             <NavLink
               to="/"
-              className={
-                /* isActive */
-                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors hover:bg-indigo-500 hover:text-white`
+              className={({ isActive }) =>
+                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors ${
+                  isActive
+                    ? "bg-indigo-500 text-white"
+                    : "hover:bg-indigo-500 hover:text-white"
+                }`
               }
             >
               <i className="ri-dashboard-line text-lg"></i>
@@ -150,9 +217,12 @@ const Navbar = () => {
             </NavLink>
             <NavLink
               to="/products"
-              className={
-                /* isActive */
-                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors hover:bg-indigo-500 hover:text-white`
+              className={({ isActive }) =>
+                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors ${
+                  isActive
+                    ? "bg-indigo-500 text-white"
+                    : "hover:bg-indigo-500 hover:text-white"
+                }`
               }
             >
               <i className="ri-shopping-bag-3-line text-lg"></i>
@@ -160,9 +230,12 @@ const Navbar = () => {
             </NavLink>
             <NavLink
               to="/cart"
-              className={
-                /* isActive */
-                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors hover:bg-indigo-500 hover:text-white`
+              className={({ isActive }) =>
+                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors ${
+                  isActive
+                    ? "bg-indigo-500 text-white"
+                    : "hover:bg-indigo-500 hover:text-white"
+                }`
               }
             >
               <i className="ri-shopping-cart-2-line text-lg"></i>

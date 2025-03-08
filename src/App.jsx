@@ -1,6 +1,7 @@
 import { Navbar } from "./components";
 import { Outlet } from "react-router";
 import { useSelector } from "react-redux";
+import { Footer } from "./components";
 
 function App() {
   const isDarkMode = useSelector((state) => state.theme?.theme === "dark");
@@ -13,13 +14,7 @@ function App() {
       <main className="container mx-auto px-4">
         <Outlet />
       </main>
-      <footer
-        className={`py-6 text-center text-sm ${
-          isDarkMode ? "text-gray-400" : "text-gray-600"
-        }`}
-      >
-        <p>© {new Date().getFullYear()} EcomStore. All rights reserved.</p>
-      </footer>
+      <Footer />
     </div>
   );
 }

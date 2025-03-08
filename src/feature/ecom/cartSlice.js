@@ -1,17 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// Get cart from localStorage or use default
+const getInitialState = () => {
+  const savedCart = localStorage.getItem("cart");
+  return savedCart
+    ? JSON.parse(savedCart)
+    : {
+        products: [],
+      };
+};
+
 export const cartSlice = createSlice({
   name: "cart",
-  initialState: {
-    products: [
-      {
-        id: 1,
-        name: "Product 1",
-        price: 100,
-        quantity: 1,
-      },
-    ],
-  },
+  initialState: getInitialState(),
   reducers: {
     addProduct: (state, action) => {
       const existingProduct = state.products.find(
@@ -26,14 +27,16 @@ export const cartSlice = createSlice({
           quantity: action.payload.quantity || 1,
         });
       }
+      localStorage.setItem("cart", JSON.stringify(state));
     },
     removeProduct: (state, action) => {
       state.products = state.products.filter(
         (product) => product.id !== action.payload.id
       );
+      localStorage.setItem("cart", JSON.stringify(state));
     },
     priceTotal: (state) => {
-      state.products.reduce(
+      return state.products.reduce(
         (total, product) => total + product.price * product.quantity,
         0
       );
