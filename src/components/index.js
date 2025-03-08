@@ -1,3 +1,4 @@
 import Navbar from "./Utils/Navbar";
 import Home from "./Home/Home";
-export { Navbar, Home };
+import Cart from "./Cart/Cart";
+export { Navbar, Home, Cart };

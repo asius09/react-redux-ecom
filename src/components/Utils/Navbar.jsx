@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 import { toggleTheme } from "../../feature/theme/theme";
 
 const Navbar = () => {
@@ -12,11 +12,7 @@ const Navbar = () => {
   useEffect(() => {
     const html = document.documentElement;
     html.classList.remove("dark", "light");
-    if (isDarkMode) {
-      html.classList.add("dark");
-    } else {
-      html.classList.add("light");
-    }
+    html.classList.add(isDarkMode ? "dark" : "light");
   }, [isDarkMode]);
 
   const handleToggleTheme = () => {
@@ -45,23 +41,32 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-8">
-            <Link
+            <NavLink
               to="/"
-              className="flex items-center gap-2 hover:text-indigo-500 font-medium transition-colors py-2"
+              className={
+                /* isActive */
+                `flex items-center gap-2 font-medium transition-colors py-2 hover:text-indigo-500`
+              }
             >
               <i className="ri-dashboard-line"></i>
               <span>Home</span>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/products"
-              className="flex items-center gap-2 hover:text-indigo-500 font-medium transition-colors py-2"
+              className={
+                /* isActive */
+                `flex items-center gap-2 font-medium transition-colors py-2 hover:text-indigo-500`
+              }
             >
               <i className="ri-shopping-bag-3-line"></i>
               <span>Products</span>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/cart"
-              className="flex items-center gap-2 hover:text-indigo-500 font-medium transition-colors py-2 relative"
+              className={
+                /* isActive */
+                `flex items-center gap-2 font-medium transition-colors py-2 relative hover:text-indigo-500`
+              }
             >
               <i className="ri-shopping-cart-2-line"></i>
               <span>Cart</span>
@@ -70,7 +75,7 @@ const Navbar = () => {
                   {cartItems.length}
                 </span>
               )}
-            </Link>
+            </NavLink>
           </div>
 
           <div className="flex items-center gap-4">
@@ -133,23 +138,32 @@ const Navbar = () => {
               isDarkMode ? "bg-gray-800" : "bg-gray-50"
             } shadow-lg`}
           >
-            <Link
+            <NavLink
               to="/"
-              className="flex items-center gap-2 py-3 px-2 hover:bg-indigo-500 hover:text-white rounded-md transition-colors"
+              className={
+                /* isActive */
+                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors hover:bg-indigo-500 hover:text-white`
+              }
             >
               <i className="ri-dashboard-line text-lg"></i>
               <span>Home</span>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/products"
-              className="flex items-center gap-2 py-3 px-2 hover:bg-indigo-500 hover:text-white rounded-md transition-colors"
+              className={
+                /* isActive */
+                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors hover:bg-indigo-500 hover:text-white`
+              }
             >
               <i className="ri-shopping-bag-3-line text-lg"></i>
               <span>Products</span>
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/cart"
-              className="flex items-center gap-2 py-3 px-2 hover:bg-indigo-500 hover:text-white rounded-md transition-colors"
+              className={
+                /* isActive */
+                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors hover:bg-indigo-500 hover:text-white`
+              }
             >
               <i className="ri-shopping-cart-2-line text-lg"></i>
               <span>Cart</span>
@@ -158,7 +172,7 @@ const Navbar = () => {
                   {cartItems.length}
                 </span>
               )}
-            </Link>
+            </NavLink>
           </div>
         )}
       </div>
