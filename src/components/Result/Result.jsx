@@ -1,87 +1,26 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useParams, useNavigate } from "react-router";
+import { fetchResults } from "../../feature/ecom/resultSlice";
 import ResultCard from "./ResultCard";
-import ResultFilter from "./ResultFilter";
 import Loading from "../Utils/Loading";
 
-const Result = ({ reviews }) => {
-  console.log(reviews);
+const Result = () => {
+  const { search } = useParams();
   const isDarkMode = useSelector((state) => state.theme?.theme === "dark");
-  const [loading, setLoading] = useState(false);
-  const [filteredResults, setFilteredResults] = useState([]);
-  const [showFilters, setShowFilters] = useState(false);
+  const { items, loading, error } = useSelector((state) => state.result);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-  const initialResults = [
-    {
-      id: 1,
-      title: "Wireless Headphones",
-      status: "success",
-      description:
-        "Premium noise-cancelling wireless headphones with 30-hour battery life",
-      date: "2023-05-15",
-      price: 199.99,
-    },
-    {
-      id: 2,
-      title: "Smart Watch",
-      status: "success",
-      description:
-        "Fitness tracker with heart rate monitoring and sleep analysis",
-      date: "2023-05-20",
-      price: 149.99,
-    },
-    {
-      id: 3,
-      title: "Portable Charger",
-      status: "failed",
-      description: "20000mAh power bank with fast charging capability",
-      date: "2023-05-18",
-      price: 49.99,
-    },
-  ];
+  useEffect(() => {
+    dispatch(fetchResults(search));
+    const timer = setTimeout(() => {
+      setIsInitialLoading(false);
+    }, 800); // Wait for 800ms to show loading state
 
-  useState(() => {
-    setFilteredResults(initialResults);
-  }, []);
-
-  const applyFilters = (filters) => {
-    setLoading(true);
-
-    setTimeout(() => {
-      let results = [...initialResults];
-
-      if (filters.searchTerm) {
-        results = results.filter(
-          (item) =>
-            item.title
-              .toLowerCase()
-              .includes(filters.searchTerm.toLowerCase()) ||
-            item.description
-              .toLowerCase()
-              .includes(filters.searchTerm.toLowerCase())
-        );
-      }
-
-      if (filters.minPrice) {
-        results = results.filter(
-          (item) => item.price >= parseFloat(filters.minPrice)
-        );
-      }
-
-      if (filters.maxPrice) {
-        results = results.filter(
-          (item) => item.price <= parseFloat(filters.maxPrice)
-        );
-      }
-
-      if (filters.status) {
-        results = results.filter((item) => item.status === filters.status);
-      }
-
-      setFilteredResults(results);
-      setLoading(false);
-    }, 500);
-  };
+    return () => clearTimeout(timer);
+  }, [dispatch, search]);
 
   return (
     <div
@@ -92,17 +31,16 @@ const Result = ({ reviews }) => {
       <div className="container mx-auto px-6">
         <div className="mb-8 flex justify-between items-center">
           <div>
-            <h2 className="text-3xl font-bold">Search Results</h2>
+            <h2 className="text-3xl font-bold">Search Results for {search}</h2>
             <p
               className={`text-sm mt-2 ${
                 isDarkMode ? "text-gray-400" : "text-gray-600"
               }`}
             >
-              Found {filteredResults?.length || 0} results matching your
-              criteria
+              Found {items?.length || 0} results matching your criteria
             </p>
           </div>
-          <button
+          {/* <button
             onClick={() => setShowFilters(!showFilters)}
             className={`px-4 py-2 rounded-lg ${
               isDarkMode
@@ -112,17 +50,42 @@ const Result = ({ reviews }) => {
           >
             <i className="ri-filter-3-line mr-2"></i>
             {showFilters ? "Hide Filters" : "Show Filters"}
-          </button>
+          </button> */}
         </div>
 
-        {showFilters && <ResultFilter applyFilters={applyFilters} />}
+        {/* {showFilters && <ResultFilter applyFilters={applyFilters} />} */}
 
-        {loading ? (
+        {/* Search Result Container */}
+        {loading || isInitialLoading ? (
           <Loading />
-        ) : filteredResults && filteredResults.length > 0 ? (
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-16">
+            <i className="ri-error-warning-line text-6xl mb-6 text-red-500"></i>
+            <h3 className="text-2xl font-semibold mb-3">
+              Error loading results
+            </h3>
+            <p
+              className={`text-center max-w-md ${
+                isDarkMode ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
+              {error.message || "Something went wrong. Please try again later."}
+            </p>
+            <button
+              className={`mt-6 px-6 py-3 rounded-lg ${
+                isDarkMode
+                  ? "bg-indigo-600 hover:bg-indigo-700"
+                  : "bg-indigo-500 hover:bg-indigo-600"
+              } text-white transition-colors`}
+              onClick={() => dispatch(fetchResults(search))}
+            >
+              Try Again
+            </button>
+          </div>
+        ) : items && items.length > 0 ? (
           <div className="flex flex-col space-y-4">
-            {filteredResults.map((result) => (
-              <div key={result.id || result.title} className="w-full">
+            {items.map((result) => (
+              <div key={result.key} className="w-full">
                 <ResultCard result={result} />
               </div>
             ))}
@@ -144,7 +107,7 @@ const Result = ({ reviews }) => {
                   ? "bg-indigo-600 hover:bg-indigo-700"
                   : "bg-indigo-500 hover:bg-indigo-600"
               } text-white transition-colors`}
-              onClick={() => (window.location.href = "/products")}
+              onClick={() => navigate("/products")}
             >
               Browse Products
             </button>

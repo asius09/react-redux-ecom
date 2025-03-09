@@ -8,10 +8,12 @@ function App() {
 
   return (
     <div
-      className={`min-h-screen ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}
+      className={`min-h-screen ${
+        isDarkMode ? "bg-gray-900" : "bg-gray-50"
+      }`}
     >
       <Navbar />
-      <main className="container mx-auto px-4">
+      <main className="container mx-auto">
         <Outlet />
       </main>
       <Footer />

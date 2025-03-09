@@ -12,7 +12,15 @@ import {
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 
-import { Home, Cart, Products, Result, ProductDetails } from "./components";
+import {
+  Home,
+  Cart,
+  Products,
+  Result,
+  ProductDetails,
+  Dashboard,
+  Wishlist,
+} from "./components";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,8 +28,10 @@ const router = createBrowserRouter(
       <Route index element={<Home />} />
       <Route path="/products" element={<Products />} />
       <Route path="/cart/:userId" element={<Cart />} />
-      <Route path="/result" element={<Result />} />
+      <Route path="/result/:search" element={<Result />} />
       <Route path="/product/:productId" element={<ProductDetails />} />
+      <Route path="/wishlist" element={<Wishlist />} />
+      <Route path="/dashboard" element={<Dashboard />} />
     </Route>
   )
 );

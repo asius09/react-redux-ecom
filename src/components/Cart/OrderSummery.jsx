@@ -81,7 +81,7 @@ const OrderSummery = ({ cartItems, formatCurrency, calculateDiscount, calculateT
           <i className="ri-arrow-left-line mr-2"></i> Continue Shopping
         </button>
 
-        <div className="mt-6 p-4 rounded-lg bg-gray-100 dark:bg-gray-700">
+        <div className={`mt-6 p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
           <div className="text-sm">
             <p className="flex items-center mb-2">
               <i className="ri-truck-line mr-2 text-indigo-500"></i>

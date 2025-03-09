@@ -3,21 +3,32 @@ import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../feature/ecom/cartSlice";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
+import { addWishlistProduct, removeWishlistProduct } from "../../feature/ecom/wishlistSlice";
 
 const ProductCard = ({ product }) => {
   const isDarkMode = useSelector((state) => state.theme?.theme === "dark");
+  const wishlistItems = useSelector((state) => state.wishlist?.products || []);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [isAddedToCart, setIsAddedToCart] = useState(false);
+  
+  const isInWishlist = wishlistItems.some(item => item.id === product.id);
 
   const handleAddToCart = () => {
     dispatch(addProduct(product));
-    setIsAddedToCart(true);
+    navigate("/cart/user");
   };
 
   const handleBuyNow = () => {
     dispatch(addProduct(product));
     navigate("/cart/user");
+  };
+  
+  const toggleWishlist = () => {
+    if (isInWishlist) {
+      dispatch(removeWishlistProduct(product));
+    } else {
+      dispatch(addWishlistProduct(product));
+    }
   };
 
   return (
@@ -32,6 +43,7 @@ const ProductCard = ({ product }) => {
             <img
               src={product.images[0]}
               alt={product.title || product.name}
+              // loading="lazy" 
               className="absolute inset-0 w-full h-full object-cover"
             />
           ) : (
@@ -44,6 +56,15 @@ const ProductCard = ({ product }) => {
               {Math.round(product.discountPercentage)}% OFF
             </div>
           )}
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              toggleWishlist();
+            }}
+            className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white bg-opacity-70 flex items-center justify-center transition-colors hover:bg-opacity-100"
+          >
+            <i className={`${isInWishlist ? "ri-heart-fill text-red-500" : "ri-heart-line text-gray-600"}`}></i>
+          </button>
         </div>
       </Link>
 
@@ -101,32 +122,20 @@ const ProductCard = ({ product }) => {
         </p>
 
         <div className="grid grid-cols-2 gap-2 mt-auto h-[40px]">
-          {isAddedToCart ? (
-            <button
-              onClick={handleAddToCart}
-              className="py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition-colors flex items-center justify-center col-span-2"
-            >
-              <i className="ri-check-line mr-2"></i>
-              Added to Cart
-            </button>
-          ) : (
-            <>
-              <button
-                onClick={handleAddToCart}
-                className="py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition-colors flex items-center justify-center"
-              >
-                <i className="ri-shopping-cart-line mr-2"></i>
-                Add to Cart
-              </button>
-              <button
-                onClick={handleBuyNow}
-                className="py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors flex items-center justify-center"
-              >
-                <i className="ri-shopping-bag-3-line mr-2"></i>
-                Buy Now
-              </button>
-            </>
-          )}
+          <button
+            onClick={handleAddToCart}
+            className="py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md transition-colors flex items-center justify-center"
+          >
+            <i className="ri-shopping-cart-line mr-2"></i>
+            Add to Cart
+          </button>
+          <button
+            onClick={handleBuyNow}
+            className="py-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-colors flex items-center justify-center"
+          >
+            <i className="ri-shopping-bag-3-line mr-2"></i>
+            Buy Now
+          </button>
         </div>
       </div>
     </div>

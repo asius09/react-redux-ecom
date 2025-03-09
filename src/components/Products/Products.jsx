@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProducts } from "../../feature/ecom/productsSlice";
+import {
+  fetchProducts,
+  fetchMoreProducts,
+} from "../../feature/ecom/productsSlice";
 import ProductCard from "./ProductCard";
 import ProductSkeleton from "./ProductSkeleton";
+import Loading from "../Utils/Loading";
 
 const Products = () => {
   const isDarkMode = useSelector((state) => state.theme?.theme === "dark");
@@ -10,6 +14,11 @@ const Products = () => {
   const dispatch = useDispatch();
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
+
+  const handleLoadMore = () => {
+    if (loading) return;
+    dispatch(fetchMoreProducts());
+  };
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -122,6 +131,22 @@ const Products = () => {
           </div>
         )}
       </div>
+      {!loading && items.length > 0 ? (
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={handleLoadMore}
+            className={`px-6 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors ${
+              isDarkMode
+                ? "bg-indigo-600 hover:bg-indigo-700"
+                : "bg-indigo-500 hover:bg-indigo-600"
+            } text-white`}
+          >
+            Load More Products <i className="ri-arrow-down-line"></i>
+          </button>
+        </div>
+      ) : (
+        <Loading />
+      )}
     </div>
   );
 };

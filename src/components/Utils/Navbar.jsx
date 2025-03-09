@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, NavLink, useLocation } from "react-router";
+import { Link, NavLink, useLocation, useNavigate } from "react-router";
 import { toggleTheme } from "../../feature/theme/theme";
-
+import { fetchResults } from "../../feature/ecom/resultSlice";
 const Navbar = () => {
   const isDarkMode = useSelector((state) => state.theme?.theme === "dark");
   const dispatch = useDispatch();
@@ -10,6 +10,7 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const cartItems = useSelector((state) => state.cart.products);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const html = document.documentElement;
@@ -29,8 +30,11 @@ const Navbar = () => {
     e.preventDefault();
     // Implement search functionality
     console.log("Searching for:", searchQuery);
+    navigate(`/result/${searchQuery}`);
+    dispatch(fetchResults(searchQuery));
+
     // Clear search after submission
-    setSearchQuery("");
+    // setSearchQuery("");
   };
 
   const isLinkActive = (path) => {
@@ -45,7 +49,7 @@ const Navbar = () => {
           : "bg-white/95 text-gray-800"
       } transition-all duration-300`}
     >
-      <div className="max-w-6xl mx-auto px-4">
+      <div className="max-w-7xl px-4 mx-auto">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <Link to="/" className="flex items-center gap-2">
@@ -80,6 +84,19 @@ const Navbar = () => {
             >
               <i className="ri-shopping-bag-3-line"></i>
               <span>Products</span>
+            </NavLink>
+            <NavLink
+              to="/wishlist"
+              className={({ isActive }) =>
+                `flex items-center gap-2 font-medium transition-colors py-2 ${
+                  isActive
+                    ? "text-indigo-600 font-semibold"
+                    : "hover:text-indigo-500"
+                }`
+              }
+            >
+              <i className="ri-heart-line"></i>
+              <span>Wishlist</span>
             </NavLink>
             <NavLink
               to="/cart/name"
@@ -118,7 +135,11 @@ const Navbar = () => {
                 type="submit"
                 className="absolute left-3 top-1/2 transform -translate-y-1/2"
               >
-                <i className={`ri-search-line ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}></i>
+                <i
+                  className={`ri-search-line ${
+                    isDarkMode ? "text-gray-400" : "text-gray-500"
+                  }`}
+                ></i>
               </button>
             </form>
           </div>
@@ -141,7 +162,7 @@ const Navbar = () => {
             </button>
 
             <Link
-              to="/account"
+              to="/dashboard"
               className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
                 isDarkMode
                   ? "bg-gray-800 hover:bg-gray-700 ring-1 ring-gray-700"
@@ -199,7 +220,11 @@ const Navbar = () => {
                 type="submit"
                 className="absolute left-3 top-1/2 transform -translate-y-1/2"
               >
-                <i className={`ri-search-line ${isDarkMode ? "text-gray-400" : "text-gray-500"}`}></i>
+                <i
+                  className={`ri-search-line ${
+                    isDarkMode ? "text-gray-400" : "text-gray-500"
+                  }`}
+                ></i>
               </button>
             </form>
             <NavLink
@@ -227,6 +252,19 @@ const Navbar = () => {
             >
               <i className="ri-shopping-bag-3-line text-lg"></i>
               <span>Products</span>
+            </NavLink>
+            <NavLink
+              to="/wishlist"
+              className={({ isActive }) =>
+                `flex items-center gap-2 py-3 px-2 rounded-md transition-colors ${
+                  isActive
+                    ? "bg-indigo-500 text-white"
+                    : "hover:bg-indigo-500 hover:text-white"
+                }`
+              }
+            >
+              <i className="ri-heart-line text-lg"></i>
+              <span>Wishlist</span>
             </NavLink>
             <NavLink
               to="/cart"

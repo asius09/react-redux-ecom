@@ -3,24 +3,34 @@ import { createSlice, createAsyncThunk, nanoid } from "@reduxjs/toolkit";
 export const fetchProducts = createAsyncThunk(
   "products/fetchProducts",
   async () => {
-    // Try to get products from localStorage first
-    const storedProducts = localStorage.getItem("products");
-
-    if (storedProducts) {
-      return JSON.parse(storedProducts);
-    }
-
-    // If not in localStorage, fetch from API
-    const response = await fetch("https://dummyjson.com/products");
+    const response = await fetch(
+      `https://dummyjson.com/products?limit=9&skip=0`
+    );
     const data = await response.json();
     const products = data.products.map((product) => ({
       ...product,
-      isAddedToCart: false,
       key: nanoid(),
     }));
 
-    // Save to localStorage for future use
-    localStorage.setItem("products", JSON.stringify(products));
+    return products;
+  }
+);
+
+export const fetchMoreProducts = createAsyncThunk(
+  "products/fetchMoreProducts",
+  async (_, { getState }) => {
+    const { items } = getState().products;
+    const count = items.length;
+
+    const response = await fetch(
+      `https://dummyjson.com/products?limit=9&skip=${count}`
+    );
+    const data = await response.json();
+
+    const products = data.products.map((product) => ({
+      ...product,
+      key: nanoid(),
+    }));
 
     return products;
   }
@@ -33,19 +43,7 @@ const productsSlice = createSlice({
     loading: false,
     error: null,
   },
-  reducers: {
-    loadMore: (state, action) => {
-      const newItems = action.payload.map((item) => ({
-        ...item,
-        key: nanoid(),
-      }));
-
-      state.items.push(...newItems);
-
-      // Update localStorage with new items
-      localStorage.setItem("products", JSON.stringify(state.items));
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchProducts.pending, (state) => {
       state.loading = true;
@@ -59,8 +57,19 @@ const productsSlice = createSlice({
       state.loading = false;
       state.error = action.error.message;
     });
+    builder.addCase(fetchMoreProducts.pending, (state) => {
+      state.loading = true;
+      state.error = null;
+    });
+    builder.addCase(fetchMoreProducts.fulfilled, (state, action) => {
+      state.loading = false;
+      state.items.push(...action.payload);
+    });
+    builder.addCase(fetchMoreProducts.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
   },
 });
 
-export const { loadMore } = productsSlice.actions;
 export default productsSlice;

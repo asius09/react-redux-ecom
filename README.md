@@ -30,25 +30,32 @@ A simple yet powerful e-commerce shopping website built with modern web technolo
 ### Installation
 
 1. Clone the repository
+
    ```
    git clone https://github.com/yourusername/ecom-shopping-website.git
    cd ecom-shopping-website
    ```
 
 2. Install dependencies
+
    ```
    npm install
    ```
+
    or
+
    ```
    yarn install
    ```
 
 3. Start the development server
+
    ```
    npm start
    ```
+
    or
+
    ```
    yarn start
    ```
@@ -88,6 +95,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Redux Documentation](https://redux.js.org/introduction/getting-started)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
-
-
 create a simple home page and keep in mind there is a navbar on top so give margin from top for 20 0r 25 make sure it's have both dark and light mode so thath it can toggle and match it with morder design use remix icons in <i className="ri-home-line" /> in this manner no import and have better ui colors for both jsut don't sleect pure white or pure black and use come custome colors.....
+
+## TODO
+
+- Add "Load More" to the Products Page(Done✅)
+- Work on the Product Card and Product Details Page for Add to Cart action(Done✅)
+- Work on the Cart Page(Done✅)
+- Work on result page(Done✅)
