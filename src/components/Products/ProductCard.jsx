@@ -3,15 +3,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { addProduct } from "../../feature/ecom/cartSlice";
 import { Link } from "react-router";
 import { useNavigate } from "react-router";
-import { addWishlistProduct, removeWishlistProduct } from "../../feature/ecom/wishlistSlice";
+import {
+  addWishlistProduct,
+  removeWishlistProduct,
+} from "../../feature/ecom/wishlistSlice";
 
 const ProductCard = ({ product }) => {
   const isDarkMode = useSelector((state) => state.theme?.theme === "dark");
   const wishlistItems = useSelector((state) => state.wishlist?.products || []);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-  const isInWishlist = wishlistItems.some(item => item.id === product.id);
+
+  const isInWishlist = wishlistItems.some((item) => item.id === product.id);
 
   const handleAddToCart = () => {
     dispatch(addProduct(product));
@@ -22,7 +25,7 @@ const ProductCard = ({ product }) => {
     dispatch(addProduct(product));
     navigate("/cart/user");
   };
-  
+
   const toggleWishlist = () => {
     if (isInWishlist) {
       dispatch(removeWishlistProduct(product));
@@ -43,7 +46,7 @@ const ProductCard = ({ product }) => {
             <img
               src={product.images[0]}
               alt={product.title || product.name}
-              // loading="lazy" 
+              loading="lazy"
               className="absolute inset-0 w-full h-full object-cover"
             />
           ) : (
@@ -63,7 +66,13 @@ const ProductCard = ({ product }) => {
             }}
             className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white bg-opacity-70 flex items-center justify-center transition-colors hover:bg-opacity-100"
           >
-            <i className={`${isInWishlist ? "ri-heart-fill text-red-500" : "ri-heart-line text-gray-600"}`}></i>
+            <i
+              className={`${
+                isInWishlist
+                  ? "ri-heart-fill text-red-500"
+                  : "ri-heart-line text-gray-600"
+              }`}
+            ></i>
           </button>
         </div>
       </Link>

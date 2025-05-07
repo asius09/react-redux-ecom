@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { removeProduct, subTotal } from "../../feature/ecom/cartSlice";
+import { removeProduct } from "../../feature/ecom/cartSlice";
 import CartItem from "./CartItem";
 import OrderSummery from "./OrderSummery";
 

@@ -7,5 +7,5 @@ import Result from "./Result/Result";
 import Loading from "./Utils/Loading";
 import Footer from "./footer/Footer";
 import Dashboard from "./user/Dashboard";
-import Wishlist from "./Wishlist/Wishlist";
+import Wishlist from "./wishlist/Wishlist";
 export { Navbar, Home, Cart, Products, Result, ProductDetails, Loading, Footer, Dashboard, Wishlist };
